@@ -7,21 +7,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/white2"
+    android:padding="20dp"
     tools:context=".MainActivity">
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="20dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal"
-            android:padding="24dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -81,18 +69,48 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone"/>
 
-            <Button
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Register"
-                android:id="@+id/registerButton"
-                android:textSize="18sp"
-                android:layout_marginTop="30dp"
-                android:backgroundTint="@color/black"
-                app:cornerRadius="20dp"/>
+                android:layout_marginTop="30dp">
 
-        </LinearLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Register"
+                    android:id="@+id/registerButton"
+                    android:textSize="18sp"
+                    android:backgroundTint="@color/black"
+                    app:cornerRadius="5dp"/>
 
-    </androidx.cardview.widget.CardView>
+                <ProgressBar
+                    android:id="@+id/registerProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/goToLoginButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Already have an account? Sign in here"
+                android:textColor="@color/black"
+                app:cornerRadius="5dp"
+                android:backgroundTint="@color/white2"/>
+
+            <ProgressBar
+                android:id="@+id/loginProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+        </FrameLayout>
 
 </LinearLayout>

@@ -26,14 +26,10 @@ class StoryAdapter(private val onItemClick: (Story) -> Unit) : ListAdapter<Story
 
     class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.tv_item_name)
-        private val descriptionTextView: TextView = itemView.findViewById(R.id.tv_item_description)
-        private val dateTextView: TextView = itemView.findViewById(R.id.tv_item_date)
         private val photoImageView: ImageView = itemView.findViewById(R.id.iv_item_photo)
 
         fun bind(story: Story) {
             nameTextView.text = story.name
-            descriptionTextView.text = story.description
-            dateTextView.text = story.createdAt
             Glide.with(itemView.context).load(story.photoUrl).into(photoImageView)
         }
     }

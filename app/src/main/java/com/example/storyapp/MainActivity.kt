@@ -1,51 +1,73 @@
 package com.example.storyapp
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.storyapp.ui.auth.AuthViewModel
 import com.example.storyapp.ui.auth.AuthViewModelFactory
-import com.example.storyapp.ui.auth.login.LoginFragment
-import com.example.storyapp.ui.home.HomeFragment
+import com.google.android.material.appbar.AppBarLayout
 
 class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
+    private lateinit var appBarLayout: AppBarLayout
     private lateinit var viewModel: AuthViewModel
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         toolbar = findViewById(R.id.toolbar)
+        appBarLayout = findViewById(R.id.appBarLayout)
+
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
         setSupportActionBar(toolbar)
+
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.homeFragment) // Specify the top-level destinations
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment, R.id.registerFragment -> {
+                    appBarLayout.visibility = android.view.View.GONE
+                }
+                else -> {
+                    appBarLayout.visibility = android.view.View.VISIBLE
+                }
+            }
+        }
 
         val factory = AuthViewModelFactory(applicationContext)
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         if (viewModel.isLoggedIn()) {
-            navigateToFragment(HomeFragment())
+            navController.navigate(R.id.homeFragment)
         } else {
-            navigateToFragment(LoginFragment())
+            navController.navigate(R.id.loginFragment)
         }
     }
 
-    fun navigateToFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment)
-            .addToBackStack(null)
-            .commit()
-        updateToolbarVisibility(fragment)
-    }
-
-    private fun updateToolbarVisibility(fragment: Fragment) {
-        toolbar.visibility = if (fragment is HomeFragment) View.VISIBLE else View.GONE
+    override fun onSupportNavigateUp(): Boolean {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     fun logout() {
         viewModel.logout()
-        navigateToFragment(LoginFragment())
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        navController.navigate(R.id.loginFragment)
     }
 }
