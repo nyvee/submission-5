@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/white2"
+    android:background="?attr/colorPrimaryVariant"
     android:padding="20dp"
     tools:context=".MainActivity">
 
@@ -19,7 +19,7 @@
                 android:textSize="36sp"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="?attr/colorOnPrimary"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                 android:paddingHorizontal="20dp"
                 android:hint="Name"
                 android:drawableLeft="@drawable/ic_person"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnPrimary"
                 android:drawablePadding="8dp"/>
 
             <EditText
@@ -44,7 +44,7 @@
                 android:paddingHorizontal="20dp"
                 android:hint="Email"
                 android:drawableLeft="@drawable/ic_email"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnPrimary"
                 android:drawablePadding="8dp"/>
 
             <EditText
@@ -58,14 +58,14 @@
                 android:paddingHorizontal="20dp"
                 android:hint="Password"
                 android:drawableLeft="@drawable/ic_lock"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorPrimary"
                 android:drawablePadding="8dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/registeredEmailTextView"
-                android:textColor="@color/black"
+                android:textColor="@color/red"
                 android:layout_marginTop="10dp"
                 android:visibility="gone"/>
 
@@ -80,7 +80,8 @@
                     android:text="Register"
                     android:id="@+id/registerButton"
                     android:textSize="18sp"
-                    android:backgroundTint="@color/black"
+                    android:backgroundTint="?attr/colorOnPrimary"
+                    android:textColor="?attr/colorPrimary"
                     app:cornerRadius="5dp"/>
 
                 <ProgressBar
@@ -88,6 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:tint="?attr/colorPrimary"
                     android:visibility="gone"/>
             </FrameLayout>
 
@@ -101,15 +103,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Already have an account? Sign in here"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnPrimary"
                 app:cornerRadius="5dp"
-                android:backgroundTint="@color/white2"/>
+                android:backgroundTint="?attr/colorPrimaryVariant"/>
 
             <ProgressBar
                 android:id="@+id/loginProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:tint="?attr/colorOnPrimary"
                 android:visibility="gone"/>
         </FrameLayout>
 

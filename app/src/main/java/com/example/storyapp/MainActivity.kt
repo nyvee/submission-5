@@ -10,12 +10,14 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.storyapp.ui.auth.AuthViewModel
 import com.example.storyapp.ui.auth.AuthViewModelFactory
 import com.google.android.material.appbar.AppBarLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
-    private lateinit var appBarLayout: AppBarLayout
     private lateinit var viewModel: AuthViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var appBarLayout: AppBarLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +31,14 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         setSupportActionBar(toolbar)
+        toolbar.overflowIcon?.let {
+            val wrappedIcon = DrawableCompat.wrap(it)
+            DrawableCompat.setTint(wrappedIcon, ContextCompat.getColor(this, R.color.white))
+            toolbar.overflowIcon = wrappedIcon
+        }
 
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeFragment) // Specify the top-level destinations
+            setOf(R.id.homeFragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 

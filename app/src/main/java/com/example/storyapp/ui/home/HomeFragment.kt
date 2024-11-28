@@ -2,55 +2,62 @@ package com.example.storyapp.ui.home
 
 import android.os.Bundle
 import android.view.*
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.storyapp.MainActivity
 import com.example.storyapp.R
+import com.example.storyapp.data.remote.response.Story
+import com.example.storyapp.databinding.FragmentHomeBinding
+import com.example.storyapp.StoryAdapter
 
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: StoryAdapter
-    private lateinit var progressBar: ProgressBar
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        recyclerView = view.findViewById(R.id.recycler_view)
-        progressBar = view.findViewById(R.id.progress_bar)
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = StoryAdapter { story ->
-            // Temporarily remove navigation to DetailStoryFragment
-        }
-        recyclerView.adapter = adapter
-        return view
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
+
         val factory = HomeViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+
+        adapter = StoryAdapter { story -> navigateToDetail(story) }
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
+
         viewModel.stories.observe(viewLifecycleOwner, { stories ->
             adapter.submitList(stories)
         })
+
         viewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
-            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            swipeRefreshLayout.isRefreshing = false
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.swipeRefreshLayout.isRefreshing = false
         })
-        swipeRefreshLayout.setOnRefreshListener {
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.fetchStories()
         }
+
         viewModel.fetchStories()
+    }
+
+    private fun navigateToDetail(story: Story) {
+        val action = HomeFragmentDirections.actionHomeFragmentToStoryDetailFragment(story)
+        findNavController().navigate(action as NavDirections)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -66,5 +73,10 @@ class HomeFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

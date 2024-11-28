@@ -31,5 +31,20 @@
         android:id="@+id/homeFragment"
         android:name="com.example.storyapp.ui.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_storyDetailFragment"
+            app:destination="@id/storyDetailFragment">
+            <argument
+                android:name="story"
+                app:argType="com.example.storyapp.data.remote.response.Story" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/storyDetailFragment"
+        android:name="com.example.storyapp.ui.detail.StoryDetailFragment"
+        android:label="Story Detail"
+        tools:layout="@layout/fragment_detail_story">
+    </fragment>
 </navigation>

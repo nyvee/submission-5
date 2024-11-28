@@ -1,4 +1,4 @@
-package com.example.storyapp.ui.home
+package com.example.storyapp
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +9,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.storyapp.R
 import com.example.storyapp.data.remote.response.Story
 
-class StoryAdapter(private val onItemClick: (Story) -> Unit) : ListAdapter<Story, StoryAdapter.StoryViewHolder>(StoryDiffCallback()) {
+class StoryAdapter(private val onItemClick: (Story) -> Unit) : ListAdapter<Story, StoryAdapter.StoryViewHolder>(
+    StoryDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.story_card, parent, false)
-        return StoryViewHolder(view)
+        return StoryViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
@@ -24,13 +25,14 @@ class StoryAdapter(private val onItemClick: (Story) -> Unit) : ListAdapter<Story
         holder.bind(story)
     }
 
-    class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class StoryViewHolder(itemView: View, private val onItemClick: (Story) -> Unit) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.tv_item_name)
         private val photoImageView: ImageView = itemView.findViewById(R.id.iv_item_photo)
 
         fun bind(story: Story) {
             nameTextView.text = story.name
             Glide.with(itemView.context).load(story.photoUrl).into(photoImageView)
+            itemView.setOnClickListener { onItemClick(story) }
         }
     }
 
