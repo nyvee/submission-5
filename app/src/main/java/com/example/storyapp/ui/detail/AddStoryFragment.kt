@@ -1,4 +1,3 @@
-// AddStoryFragment.kt
 package com.example.storyapp.ui.detail
 
 import android.Manifest
@@ -29,7 +28,6 @@ import java.io.File as JavaFile
 import android.content.ContentResolver
 import android.database.Cursor
 import android.provider.OpenableColumns
-import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.activity.addCallback
@@ -69,7 +67,6 @@ class AddStoryFragment : Fragment() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        // Handle back navigation
         mainActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             mainActivity.onBackPressed()
         }
@@ -86,7 +83,6 @@ class AddStoryFragment : Fragment() {
             val sharedPref = requireContext().getSharedPreferences("UserPrefs", AppCompatActivity.MODE_PRIVATE)
             val token = sharedPref.getString("token", "")
             if (token.isNullOrEmpty()) {
-                Log.e("AddStoryFragment", "Token is empty or null")
                 Toast.makeText(requireContext(), "Token is missing. Please log in again.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -151,17 +147,17 @@ class AddStoryFragment : Fragment() {
         }
     }
 
-private fun getFileFromUri(uri: Uri): JavaFile? {
-    val contentResolver: ContentResolver = requireContext().contentResolver
-    val fileName: String = getFileName(uri) ?: "temp_file"
-    val tempFile = JavaFile.createTempFile(fileName, null, requireContext().cacheDir)
-    tempFile.outputStream().use { outputStream ->
-        contentResolver.openInputStream(uri)?.use { inputStream ->
-            inputStream.copyTo(outputStream)
+    private fun getFileFromUri(uri: Uri): JavaFile? {
+        val contentResolver: ContentResolver = requireContext().contentResolver
+        val fileName: String = getFileName(uri) ?: "temp_file"
+        val tempFile = JavaFile.createTempFile(fileName, null, requireContext().cacheDir)
+        tempFile.outputStream().use { outputStream ->
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                inputStream.copyTo(outputStream)
+            }
         }
+        return tempFile
     }
-    return tempFile
-}
 
     @SuppressLint("Range")
     private fun getFileName(uri: Uri): String? {
@@ -191,15 +187,12 @@ private fun getFileFromUri(uri: Uri): JavaFile? {
                         photo = body
                     )
                     if (response.error) {
-                        Log.e("AddStoryFragment", "Failed to upload story: ${response.message}")
                         Toast.makeText(requireContext(), "Failed to upload story: ${response.message}", Toast.LENGTH_SHORT).show()
                     } else {
-                        Log.d("AddStoryFragment", "Story uploaded successfully")
                         Toast.makeText(requireContext(), "Story uploaded successfully", Toast.LENGTH_SHORT).show()
                         (activity as MainActivity).navigateWithAnimation(R.id.homeFragment)
                     }
                 } catch (e: Exception) {
-                    Log.e("AddStoryFragment", "Error uploading story", e)
                     Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -228,7 +221,6 @@ private fun getFileFromUri(uri: Uri): JavaFile? {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        // Revert toolbar configuration
         val mainActivity = activity as AppCompatActivity
         mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }

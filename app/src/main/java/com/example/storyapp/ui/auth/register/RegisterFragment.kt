@@ -43,7 +43,6 @@ class RegisterFragment : Fragment() {
         viewModel = ViewModelProvider(this, AuthViewModelFactory(requireContext())).get(AuthViewModel::class.java)
         val registerButton: Button = view.findViewById(R.id.registerButton)
         val registerProgressBar: ProgressBar = view.findViewById(R.id.registerProgressBar)
-        val loginProgressBar: ProgressBar = view.findViewById(R.id.loginProgressBar)
         val goToLoginButton: Button = view.findViewById(R.id.goToLoginButton)
         nameEditText = view.findViewById(R.id.ed_register_name)
         emailEditText = view.findViewById(R.id.ed_register_email)
@@ -104,7 +103,6 @@ class RegisterFragment : Fragment() {
 
         viewModel.registrationState.observe(viewLifecycleOwner) { isRegistered ->
             if (isRegistered) {
-                registeredEmailTextView.text = "Registered Email: ${viewModel.registeredEmail.value}"
                 findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
         }

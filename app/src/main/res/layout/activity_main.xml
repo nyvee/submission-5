@@ -19,8 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/bg_shape"
             app:iconTint="?attr/colorPrimary"
-            app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
+            app:titleTextAppearance="@style/ToolbarTitleTextStyle" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView

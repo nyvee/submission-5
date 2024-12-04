@@ -41,11 +41,9 @@ class StoryAdapter(private val onItemClick: (Story) -> Unit) : ListAdapter<Story
         fun bind(story: Story) {
             nameTextView.text = story.name
 
-            // Show the progress bar and hide the error message
             progressBar.visibility = View.VISIBLE
             errorTextView.visibility = View.GONE
 
-            // Load the image with Glide and manage the visibility of the progress bar and error message
             Glide.with(itemView.context)
                 .load(story.photoUrl)
                 .listener(object : RequestListener<Drawable> {
@@ -55,7 +53,6 @@ class StoryAdapter(private val onItemClick: (Story) -> Unit) : ListAdapter<Story
                         target: Target<Drawable>,
                         isFirstResource: Boolean
                     ): Boolean {
-                        // Hide the progress bar and show the error message if the load fails
                         progressBar.visibility = View.GONE
                         errorTextView.visibility = View.VISIBLE
                         return false
@@ -68,7 +65,6 @@ class StoryAdapter(private val onItemClick: (Story) -> Unit) : ListAdapter<Story
                         dataSource: DataSource,
                         isFirstResource: Boolean
                     ): Boolean {
-                        // Hide the progress bar once the image is loaded
                         progressBar.visibility = View.GONE
                         return false
                     }

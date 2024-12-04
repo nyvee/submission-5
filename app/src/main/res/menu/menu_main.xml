@@ -1,8 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_localization"
+        android:icon="@drawable/ic_translate"
+        android:title=""
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_logout"
-        android:orderInCategory="100"
-        android:title="Logout"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_logout"
+        android:title=""
+        app:showAsAction="always" />
 </menu>

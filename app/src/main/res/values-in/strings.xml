@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="invalid_email">Format email tidak valid</string>
+    <string name="story_detail_title">Detail Cerita</string>
+    <string name="gallery">Galeri</string>
+    <string name="camera">Ambil Gambar</string>
+    <string name="add_story_title">Tambah Cerita</string>
+    <string name="toggle_password_visibility">Ubah Visibilitas Kata Sandi</string>
+    <string name="password_too_short">Password terlalu pendek</string>
+    <string name="story_description">Deskripsi Cerita</string>
+    <string name="upload_story">Unggah Cerita</string>
+</resources>

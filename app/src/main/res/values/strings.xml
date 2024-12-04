@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">StoryApp</string>
-    <string name="password_too_short">Password is Too Short</string>
     <string name="invalid_email">Invalid email format</string>
     <string name="story_detail_title">Story Detail</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Take a Photo</string>
     <string name="add_story_title">Add Story</string>
     <string name="toggle_password_visibility">Toggle Password Visibility</string>
+    <string name="password_too_short">Password Too Short</string>
+    <string name="story_description">Story Description</string>
+    <string name="upload_story">Upload Story</string>
 </resources>

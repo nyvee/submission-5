@@ -1,6 +1,8 @@
 package com.example.storyapp
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -8,13 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.storyapp.ui.home.HomeFragment
 import com.example.storyapp.ui.auth.AuthViewModel
 import com.example.storyapp.ui.auth.AuthViewModelFactory
 import com.google.android.material.appbar.AppBarLayout
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.navigation.NavOptions
-import android.util.Log
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
@@ -34,24 +35,21 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         setSupportActionBar(toolbar)
-        toolbar.overflowIcon?.let {
-            val wrappedIcon = DrawableCompat.wrap(it)
-            DrawableCompat.setTint(wrappedIcon, ContextCompat.getColor(this, R.color.white))
-            toolbar.overflowIcon = wrappedIcon
-        }
 
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homeFragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        // Centralized toolbar updates for each destination
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.homeFragment -> updateToolbar(getString(R.string.app_name), false)
+                R.id.homeFragment -> {
+                    updateToolbar(getString(R.string.app_name), false)
+                    invalidateOptionsMenu()
+                }
                 R.id.storyDetailFragment -> updateToolbar(getString(R.string.story_detail_title), true)
                 R.id.addStoryFragment -> updateToolbar(getString(R.string.add_story_title), true)
-                else -> updateToolbarVisibility(false) // Hide for unexpected destinations
+                else -> updateToolbarVisibility(false)
             }
         }
 
@@ -65,8 +63,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Reusable method to update toolbar properties
-    fun updateToolbar(title: String, showBackButton: Boolean) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val logoutItem = menu.findItem(R.id.action_logout)
+        val localizationItem = menu.findItem(R.id.action_localization)
+        val isHomeFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.childFragmentManager?.fragments?.get(0) is HomeFragment
+        logoutItem.isVisible = isHomeFragment
+        localizationItem.isVisible = isHomeFragment
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                logout()
+                true
+            }
+            R.id.action_localization -> {
+                switchLocalization()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun updateToolbar(title: String, showBackButton: Boolean) {
         supportActionBar?.apply {
             this.title = title
             setDisplayHomeAsUpEnabled(showBackButton)
@@ -74,9 +101,7 @@ class MainActivity : AppCompatActivity() {
         updateToolbarVisibility(true)
     }
 
-    // Hide or show toolbar and AppBarLayout
     private fun updateToolbarVisibility(isVisible: Boolean) {
-        Log.d("MainActivity", "Setting toolbar visibility to: $isVisible")
         if (isVisible) {
             supportActionBar?.show()
             appBarLayout.visibility = View.VISIBLE
@@ -86,17 +111,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun logout() {
+        viewModel.logout()
+        finishAffinity()
+    }
+
+    private fun switchLocalization() {
+        val currentLocale = resources.configuration.locales[0].language
+        val newLocale = if (currentLocale == "en") "id" else "en"
+        setLocale(newLocale)
+    }
+
+    private fun setLocale(localeName: String) {
+        val locale = Locale(localeName)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+        recreate()
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    fun logout() {
-        viewModel.logout()
-        finishAffinity()
     }
 
     fun navigateWithAnimation(destinationId: Int, args: Bundle? = null) {

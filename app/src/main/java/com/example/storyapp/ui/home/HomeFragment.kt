@@ -67,21 +67,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         (activity as MainActivity).navigateWithAnimation(R.id.addStoryFragment)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_logout -> {
-                (activity as MainActivity).logout()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         (activity as? AppCompatActivity)?.supportActionBar?.apply {

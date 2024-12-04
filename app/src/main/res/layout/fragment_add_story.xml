@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:padding="10dp"
-                android:hint="Story Description"
+                android:hint="@string/story_description"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:background="@drawable/custom_edittext"
@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:backgroundTint="?attr/colorOnPrimary"
-                    android:text="Upload Story"
+                    android:text="@string/upload_story"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="18sp"
                     app:cornerRadius="5dp" />

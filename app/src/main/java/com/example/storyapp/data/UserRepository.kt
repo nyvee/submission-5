@@ -1,7 +1,6 @@
 package com.example.storyapp.data
 
 import android.content.Context
-import android.util.Log
 import com.example.storyapp.data.remote.response.ErrorResponse
 import com.example.storyapp.data.remote.response.LoginResponse
 import com.example.storyapp.data.remote.response.RegisterResponse
@@ -42,7 +41,6 @@ class UserRepository(private val context: Context) {
 
     private fun saveToken(token: String?) {
         sharedPref.edit().putString("token", token).apply()
-        Log.d("UserRepository", "Token saved: $token")
     }
 
     fun clearSession() {
