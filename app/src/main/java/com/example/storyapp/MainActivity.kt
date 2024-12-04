@@ -12,6 +12,7 @@ import com.example.storyapp.ui.auth.AuthViewModelFactory
 import com.google.android.material.appbar.AppBarLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.navigation.NavOptions
 
 class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
@@ -72,9 +73,21 @@ class MainActivity : AppCompatActivity() {
 
     fun logout() {
         viewModel.logout()
+        finishAffinity()
+    }
+
+    fun navigateWithAnimation(destinationId: Int, args: Bundle? = null) {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        navController.navigate(R.id.loginFragment)
+
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.slide_out_left)
+            .setPopEnterAnim(R.anim.slide_in_left)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+
+        navController.navigate(destinationId, args, navOptions)
     }
 }

@@ -34,7 +34,7 @@
                 android:textColor="?attr/colorOnPrimary"
                 android:drawablePadding="8dp"/>
 
-            <EditText
+            <com.example.storyapp.ui.custom.EmailEditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/ed_register_email"
@@ -47,7 +47,7 @@
                 android:textColor="?attr/colorOnPrimary"
                 android:drawablePadding="8dp"/>
 
-            <EditText
+            <com.example.storyapp.ui.custom.PasswordEditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/ed_register_password"
@@ -89,6 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:backgroundTint="?attr/colorPrimary"
                     android:tint="?attr/colorPrimary"
                     android:visibility="gone"/>
             </FrameLayout>

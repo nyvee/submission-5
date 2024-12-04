@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.MainActivity
 import com.example.storyapp.R
 import com.example.storyapp.data.StoryRepository
 import com.example.storyapp.data.remote.response.Story
 import com.example.storyapp.databinding.FragmentHomeBinding
-import com.example.storyapp.StoryAdapter
 
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
@@ -63,12 +61,11 @@ class HomeFragment : Fragment() {
 
     private fun navigateToDetail(story: Story) {
         val action = HomeFragmentDirections.actionHomeFragmentToStoryDetailFragment(story)
-        findNavController().navigate(action)
+        (activity as MainActivity).navigateWithAnimation(action.actionId, action.arguments)
     }
 
     private fun navigateToAddStory() {
-        val action = HomeFragmentDirections.actionHomeFragmentToAddStoryFragment()
-        findNavController().navigate(action)
+        (activity as MainActivity).navigateWithAnimation(R.id.addStoryFragment)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
