@@ -12,7 +12,6 @@ class AuthViewModel(context: Context) : ViewModel() {
     val loginState = MutableLiveData<Boolean>()
     val wrongCredentials = MutableLiveData<String>()
     val registrationState = MutableLiveData<Boolean>()
-    val registeredEmail = MutableLiveData<String>()
 
     fun register(name: String, email: String, password: String, callback: (Boolean, String?) -> Unit) {
         viewModelScope.launch {

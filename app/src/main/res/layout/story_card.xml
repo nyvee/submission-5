@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="10dp"
+                android:textColor="?attr/colorOnPrimary"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:maxLines="1" />

@@ -97,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.apply {
             this.title = title
             setDisplayHomeAsUpEnabled(showBackButton)
+            if (showBackButton) {
+                setHomeAsUpIndicator(R.drawable.ic_back)
+            }
         }
         updateToolbarVisibility(true)
     }

@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +30,8 @@ class RegisterFragment : Fragment() {
     private lateinit var passwordEditText: EditText
     private lateinit var passwordVisibilityToggle: ImageView
     private lateinit var registeredEmailTextView: TextView
+    private lateinit var registerButton: Button
+    private lateinit var goToLoginButton: Button
     private var isPasswordVisible = false
 
     override fun onCreateView(
@@ -41,9 +44,9 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, AuthViewModelFactory(requireContext())).get(AuthViewModel::class.java)
-        val registerButton: Button = view.findViewById(R.id.registerButton)
+        registerButton = view.findViewById(R.id.registerButton)
         val registerProgressBar: ProgressBar = view.findViewById(R.id.registerProgressBar)
-        val goToLoginButton: Button = view.findViewById(R.id.goToLoginButton)
+        goToLoginButton = view.findViewById(R.id.goToLoginButton)
         nameEditText = view.findViewById(R.id.ed_register_name)
         emailEditText = view.findViewById(R.id.ed_register_email)
         passwordEditText = view.findViewById(R.id.ed_register_password)
@@ -61,12 +64,21 @@ class RegisterFragment : Fragment() {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
             registerButton.isEnabled = false
+            registerButton.text = ""
+            registerButton.setBackgroundColor(resources.getColor(R.color.gray))
+            context?.let { it1 -> ContextCompat.getColor(it1, R.color.white) }?.let { it2 ->
+                registerProgressBar.indeterminateDrawable.setColorFilter(
+                    it2, android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            }
             registerProgressBar.visibility = View.VISIBLE
 
             lifecycleScope.launch {
                 try {
                     viewModel.register(name, email, password) { isSuccess, message ->
                         registerButton.isEnabled = true
+                        registerButton.text = "Register"
+                        registerButton.setBackgroundColor(resources.getColor(R.color.black))
                         registerProgressBar.visibility = View.GONE
                         if (isSuccess) {
                             Toast.makeText(requireContext(), "Registration Successful!", Toast.LENGTH_SHORT).show()
@@ -83,6 +95,8 @@ class RegisterFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     registerButton.isEnabled = true
+                    registerButton.text = "Register"
+                    registerButton.setBackgroundColor(resources.getColor(R.color.gray))
                     registerProgressBar.visibility = View.GONE
                     registeredEmailTextView.text = e.message
                 }

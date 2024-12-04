@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:paddingHorizontal="10dp"
+                android:textColor="?attr/colorOnPrimary"
                 android:textSize="28sp"
                 app:layout_constraintTop_toBottomOf="@+id/iv_item_photo_container" />
 
@@ -54,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="40dp"
                 android:paddingHorizontal="10dp"
+                android:textColor="?attr/colorOnPrimary"
                 android:textSize="16sp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_description"/>
 
@@ -61,6 +63,7 @@
                 android:id="@+id/tv_detail_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/colorOnPrimary"
                 android:padding="10dp"
                 android:textSize="15sp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_name" />

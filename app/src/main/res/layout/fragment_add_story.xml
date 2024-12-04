@@ -81,6 +81,8 @@
                 android:layout_margin="20dp"
                 android:padding="10dp"
                 android:hint="@string/story_description"
+                android:textColorHint="@color/gray"
+                android:textColor="?attr/colorOnPrimary"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:background="@drawable/custom_edittext"

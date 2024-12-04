@@ -30,6 +30,7 @@
         android:paddingVertical="8dp"
         android:paddingHorizontal="20dp"
         android:hint="Email"
+        android:textColorHint="@color/gray"
         android:drawableLeft="@drawable/ic_email"
         android:textColor="?attr/colorOnPrimary"
         android:drawablePadding="8dp"/>
@@ -48,6 +49,7 @@
             android:paddingVertical="8dp"
             android:paddingHorizontal="20dp"
             android:hint="Password"
+            android:textColorHint="@color/gray"
             android:drawableLeft="@drawable/ic_lock"
             android:textColor="?attr/colorPrimary"
             android:drawablePadding="8dp"/>

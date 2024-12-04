@@ -1,5 +1,6 @@
 package com.example.storyapp.ui.auth.login
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -37,6 +39,7 @@ class LoginFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, AuthViewModelFactory(requireContext())).get(AuthViewModel::class.java)
@@ -59,12 +62,22 @@ class LoginFragment : Fragment() {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
             loginButton.isEnabled = false
+            loginButton.text = ""
+            loginButton.setBackgroundColor(resources.getColor(R.color.gray))
+            context?.let { it1 -> ContextCompat.getColor(it1, R.color.white) }?.let { it2 ->
+                loginProgressBar.indeterminateDrawable.setColorFilter(
+                    it2, android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            }
             loginProgressBar.visibility = View.VISIBLE
+
 
             lifecycleScope.launch {
                 try {
                     viewModel.login(email, password) { isSuccess, message ->
                         loginButton.isEnabled = true
+                        loginButton.text = "Login"
+                        loginButton.setBackgroundColor(resources.getColor(R.color.black))
                         loginProgressBar.visibility = View.GONE
                         if (isSuccess) {
                             Toast.makeText(requireContext(), "Login Successful!", Toast.LENGTH_SHORT).show()
@@ -81,6 +94,8 @@ class LoginFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     loginButton.isEnabled = true
+                    loginButton.text = "Login"
+                    loginButton.setBackgroundColor(resources.getColor(R.color.gray))
                     loginProgressBar.visibility = View.GONE
                     wrongCredentialsTextView.text = e.message
                 }
