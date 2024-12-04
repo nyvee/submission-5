@@ -1,8 +1,8 @@
-// HomeFragment.kt
 package com.example.storyapp.ui.home
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +12,7 @@ import com.example.storyapp.data.StoryRepository
 import com.example.storyapp.data.remote.response.Story
 import com.example.storyapp.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: StoryAdapter
     private var _binding: FragmentHomeBinding? = null
@@ -29,7 +29,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
 
         val repository = StoryRepository(requireContext())
         val factory = HomeViewModelFactory(repository, requireContext())
@@ -83,8 +82,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onResume() {
+        super.onResume()
+        (activity as? AppCompatActivity)?.supportActionBar?.apply {
+            title = getString(R.string.app_name)
+            setDisplayHomeAsUpEnabled(false)
+        }
     }
 }

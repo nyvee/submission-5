@@ -1,6 +1,7 @@
 package com.example.storyapp
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,7 @@ import com.google.android.material.appbar.AppBarLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.navigation.NavOptions
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
@@ -43,14 +45,13 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        // Centralized toolbar updates for each destination
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.loginFragment, R.id.registerFragment -> {
-                    appBarLayout.visibility = android.view.View.GONE
-                }
-                else -> {
-                    appBarLayout.visibility = android.view.View.VISIBLE
-                }
+                R.id.homeFragment -> updateToolbar(getString(R.string.app_name), false)
+                R.id.storyDetailFragment -> updateToolbar(getString(R.string.story_detail_title), true)
+                R.id.addStoryFragment -> updateToolbar(getString(R.string.add_story_title), true)
+                else -> updateToolbarVisibility(false) // Hide for unexpected destinations
             }
         }
 
@@ -63,6 +64,28 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.loginFragment)
         }
     }
+
+    // Reusable method to update toolbar properties
+    fun updateToolbar(title: String, showBackButton: Boolean) {
+        supportActionBar?.apply {
+            this.title = title
+            setDisplayHomeAsUpEnabled(showBackButton)
+        }
+        updateToolbarVisibility(true)
+    }
+
+    // Hide or show toolbar and AppBarLayout
+    private fun updateToolbarVisibility(isVisible: Boolean) {
+        Log.d("MainActivity", "Setting toolbar visibility to: $isVisible")
+        if (isVisible) {
+            supportActionBar?.show()
+            appBarLayout.visibility = View.VISIBLE
+        } else {
+            supportActionBar?.hide()
+            appBarLayout.visibility = View.GONE
+        }
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         val navHostFragment = supportFragmentManager

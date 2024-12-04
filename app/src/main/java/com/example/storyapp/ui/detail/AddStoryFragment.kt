@@ -1,3 +1,4 @@
+// AddStoryFragment.kt
 package com.example.storyapp.ui.detail
 
 import android.Manifest
@@ -17,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.storyapp.R
 import com.example.storyapp.data.remote.retrofit.RetrofitInstance
 import com.example.storyapp.databinding.FragmentAddStoryBinding
@@ -32,6 +32,7 @@ import android.provider.OpenableColumns
 import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.activity.addCallback
 import com.example.storyapp.MainActivity
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
@@ -40,7 +41,6 @@ class AddStoryFragment : Fragment() {
 
     private var _binding: FragmentAddStoryBinding? = null
     private val binding get() = _binding!!
-    private lateinit var currentPhotoPath: String
 
     private val requestCameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -63,14 +63,15 @@ class AddStoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        (activity as AppCompatActivity).supportActionBar?.apply {
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.supportActionBar?.apply {
             title = getString(R.string.add_story_title)
             setDisplayHomeAsUpEnabled(true)
         }
 
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+        // Handle back navigation
+        mainActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            mainActivity.onBackPressed()
         }
 
         binding.galleryButton.setOnClickListener {
@@ -226,6 +227,9 @@ private fun getFileFromUri(uri: Uri): JavaFile? {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+
+        // Revert toolbar configuration
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 }

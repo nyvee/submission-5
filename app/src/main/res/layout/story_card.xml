@@ -38,19 +38,18 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/iv_item_photo_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_item_name_container">
 
             <ImageView
                 android:id="@+id/iv_item_photo"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitCenter" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

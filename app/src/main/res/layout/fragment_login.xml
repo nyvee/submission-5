@@ -34,19 +34,33 @@
         android:textColor="?attr/colorOnPrimary"
         android:drawablePadding="8dp"/>
 
-    <com.example.storyapp.ui.custom.PasswordEditText
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/ed_login_password"
-        android:background="@drawable/custom_edittext"
-        android:layout_marginTop="20dp"
-        android:inputType="textPassword"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="20dp"
-        android:hint="Password"
-        android:drawableLeft="@drawable/ic_lock"
-        android:textColor="?attr/colorPrimary"
-        android:drawablePadding="8dp"/>
+        android:layout_marginTop="20dp">
+
+        <com.example.storyapp.ui.custom.PasswordEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ed_login_password"
+            android:background="@drawable/custom_edittext"
+            android:inputType="textPassword"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="20dp"
+            android:hint="Password"
+            android:drawableLeft="@drawable/ic_lock"
+            android:textColor="?attr/colorPrimary"
+            android:drawablePadding="8dp"/>
+
+        <ImageView
+            android:id="@+id/passwordVisibilityToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:padding="8dp"
+            android:src="@drawable/ic_visibility_off"
+            android:contentDescription="@string/toggle_password_visibility"/>
+    </FrameLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -81,27 +95,14 @@
             android:visibility="gone"/>
     </FrameLayout>
 
-    <FrameLayout
+    <Button
+        android:id="@+id/goToRegisterButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <Button
-            android:id="@+id/goToRegisterButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Don't have an account? Register here"
-            android:textColor="?attr/colorOnPrimary"
-            app:cornerRadius="5dp"
-            android:backgroundTint="?attr/colorPrimaryVariant"/>
-
-        <ProgressBar
-            android:id="@+id/registerProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:tint="?attr/colorOnPrimary"
-            android:visibility="gone"/>
-    </FrameLayout>
+        android:layout_marginTop="20dp"
+        android:text="Don't have an account? Register here"
+        android:textColor="?attr/colorOnPrimary"
+        app:cornerRadius="5dp"
+        android:backgroundTint="?attr/colorPrimaryVariant"/>
 
 </LinearLayout>

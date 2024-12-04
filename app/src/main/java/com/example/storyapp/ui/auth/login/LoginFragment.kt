@@ -1,11 +1,13 @@
 package com.example.storyapp.ui.auth.login
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.storyapp.R
 import com.example.storyapp.ui.auth.AuthViewModel
@@ -23,7 +26,9 @@ class LoginFragment : Fragment() {
     private lateinit var viewModel: AuthViewModel
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
+    private lateinit var passwordVisibilityToggle: ImageView
     private lateinit var wrongCredentialsTextView: TextView
+    private var isPasswordVisible = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,13 +43,17 @@ class LoginFragment : Fragment() {
 
         val loginButton: Button = view.findViewById(R.id.loginButton)
         val loginProgressBar: ProgressBar = view.findViewById(R.id.loginProgressBar)
-        val registerProgressBar: ProgressBar = view.findViewById(R.id.registerProgressBar)
         val goToRegisterButton: Button = view.findViewById(R.id.goToRegisterButton)
         emailEditText = view.findViewById(R.id.ed_login_email)
         passwordEditText = view.findViewById(R.id.ed_login_password)
+        passwordVisibilityToggle = view.findViewById(R.id.passwordVisibilityToggle)
         wrongCredentialsTextView = view.findViewById(R.id.wrongCredentialsTextView)
 
         (activity as AppCompatActivity).supportActionBar?.hide()
+
+        passwordVisibilityToggle.setOnClickListener {
+            togglePasswordVisibility()
+        }
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
@@ -59,7 +68,13 @@ class LoginFragment : Fragment() {
                         loginProgressBar.visibility = View.GONE
                         if (isSuccess) {
                             Toast.makeText(requireContext(), "Login Successful!", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                            val navOptions = NavOptions.Builder()
+                                .setEnterAnim(R.anim.slide_in_right)
+                                .setExitAnim(R.anim.slide_out_left)
+                                .setPopEnterAnim(R.anim.slide_in_left)
+                                .setPopExitAnim(R.anim.slide_out_right)
+                                .build()
+                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment, null, navOptions)
                         } else {
                             wrongCredentialsTextView.text = message
                         }
@@ -74,10 +89,14 @@ class LoginFragment : Fragment() {
 
         goToRegisterButton.setOnClickListener {
             goToRegisterButton.isEnabled = false
-            registerProgressBar.visibility = View.VISIBLE
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment, null, navOptions)
             goToRegisterButton.isEnabled = true
-            registerProgressBar.visibility = View.GONE
         }
 
         viewModel.loginState.observe(viewLifecycleOwner) { isLoggedIn ->
@@ -89,6 +108,18 @@ class LoginFragment : Fragment() {
         viewModel.wrongCredentials.observe(viewLifecycleOwner) { wrongCredentials ->
             wrongCredentialsTextView.text = wrongCredentials
         }
+    }
+
+    private fun togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            passwordVisibilityToggle.setImageResource(R.drawable.ic_visibility_off)
+        } else {
+            passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            passwordVisibilityToggle.setImageResource(R.drawable.ic_visibility)
+        }
+        passwordEditText.setSelection(passwordEditText.text.length)
+        isPasswordVisible = !isPasswordVisible
     }
 
     override fun onDestroyView() {

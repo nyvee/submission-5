@@ -6,4 +6,5 @@
     <string name="gallery">Gallery</string>
     <string name="camera">Take a Photo</string>
     <string name="add_story_title">Add Story</string>
+    <string name="toggle_password_visibility">Toggle Password Visibility</string>
 </resources>

@@ -1,11 +1,13 @@
+// StoryDetailFragment.kt
 package com.example.storyapp.ui.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.storyapp.R
@@ -29,22 +31,19 @@ class StoryDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.apply {
-            (requireActivity() as AppCompatActivity).setSupportActionBar(this)
-            setNavigationIcon(R.drawable.ic_back)
-            navigationIcon?.apply {
-                setTint(ContextCompat.getColor(requireContext(), R.color.white))
-            }
-            setNavigationOnClickListener {
-                requireActivity().onBackPressed()
-            }
-        }
-
-        (activity as AppCompatActivity).supportActionBar?.apply {
+        // Update the toolbar title and navigation
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.supportActionBar?.apply {
             title = getString(R.string.story_detail_title)
             setDisplayHomeAsUpEnabled(true)
         }
 
+        // Handle back navigation
+        mainActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            mainActivity.onBackPressed()
+        }
+
+        // Populate story details
         val story = arguments?.getParcelable<Story>("story")
         story?.let {
             binding.tvDetailName.text = "by ${it.name}"
@@ -56,6 +55,11 @@ class StoryDetailFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+
+        // Revert toolbar configuration
+        val mainActivity = activity as AppCompatActivity
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
+
 }
+

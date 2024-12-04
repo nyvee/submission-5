@@ -11,16 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimaryVariant"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+        android:visibility="visible">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/bg_shape"
-            android:iconTint="?attr/colorPrimary"
-            android:tint="?attr/colorPrimary"
-            app:titleTextAppearance="@style/ToolbarTitleTextStyle"/>
+            app:iconTint="?attr/colorPrimary"
+            app:titleTextAppearance="@style/ToolbarTitleTextStyle"
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView
