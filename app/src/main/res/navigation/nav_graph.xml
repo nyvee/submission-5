@@ -33,6 +33,9 @@
         android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
+            android:id="@+id/action_homeFragment_to_addStoryFragment"
+            app:destination="@id/addStoryFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_storyDetailFragment"
             app:destination="@id/storyDetailFragment">
             <argument
@@ -47,4 +50,9 @@
         android:label="Story Detail"
         tools:layout="@layout/fragment_detail_story">
     </fragment>
+
+    <fragment
+        android:id="@+id/addStoryFragment"
+        android:name="com.example.storyapp.ui.detail.AddStoryFragment"
+        android:label="AddStoryFragment" />
 </navigation>

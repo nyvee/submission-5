@@ -1,14 +1,15 @@
+// HomeFragment.kt
 package com.example.storyapp.ui.home
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.MainActivity
 import com.example.storyapp.R
+import com.example.storyapp.data.StoryRepository
 import com.example.storyapp.data.remote.response.Story
 import com.example.storyapp.databinding.FragmentHomeBinding
 import com.example.storyapp.StoryAdapter
@@ -32,7 +33,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
 
-        val factory = HomeViewModelFactory(requireContext())
+        val repository = StoryRepository(requireContext())
+        val factory = HomeViewModelFactory(repository, requireContext())
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
         adapter = StoryAdapter { story -> navigateToDetail(story) }
@@ -52,12 +54,21 @@ class HomeFragment : Fragment() {
             viewModel.fetchStories()
         }
 
+        binding.fabAddStory.setOnClickListener {
+            navigateToAddStory()
+        }
+
         viewModel.fetchStories()
     }
 
     private fun navigateToDetail(story: Story) {
         val action = HomeFragmentDirections.actionHomeFragmentToStoryDetailFragment(story)
-        findNavController().navigate(action as NavDirections)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToAddStory() {
+        val action = HomeFragmentDirections.actionHomeFragmentToAddStoryFragment()
+        findNavController().navigate(action)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -10,8 +10,7 @@ import com.example.storyapp.data.StoryRepository
 import com.example.storyapp.data.remote.response.Story
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val context: Context) : ViewModel() {
-    private val repository = StoryRepository(context)
+class HomeViewModel(private val repository: StoryRepository, private val context: Context) : ViewModel() {
     val stories = MutableLiveData<List<Story>>()
     val isLoading = MutableLiveData<Boolean>()
 

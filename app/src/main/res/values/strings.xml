@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">StoryApp</string>
     <string name="password_too_short">Password is Too Short</string>
+    <string name="invalid_email">Invalid email format</string>
     <string name="story_detail_title">Story Detail</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Take a Photo</string>
+    <string name="add_story_title">Add Story</string>
 </resources>

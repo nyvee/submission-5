@@ -19,3 +19,8 @@ data class StoryResponse(
     val message: String,
     val listStory: List<Story>
 )
+
+data class AddStoryResponse(
+    val error: Boolean,
+    val message: String
+)
