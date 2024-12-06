@@ -70,4 +70,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
 
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha03")
+    implementation("com.auth0:java-jwt:4.0.0")
 }

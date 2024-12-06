@@ -1,6 +1,8 @@
 package com.example.storyapp.data
 
 import android.content.Context
+import android.content.SharedPreferences
+import com.auth0.jwt.JWT
 import com.example.storyapp.data.remote.response.ErrorResponse
 import com.example.storyapp.data.remote.response.LoginResponse
 import com.example.storyapp.data.remote.response.RegisterResponse
@@ -9,9 +11,11 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.util.*
 
 class UserRepository(private val context: Context) {
-    private val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    private val sharedPref: SharedPreferences =
+        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
     suspend fun register(name: String, email: String, password: String): RegisterResponse {
         return withContext(Dispatchers.IO) {
@@ -40,7 +44,11 @@ class UserRepository(private val context: Context) {
     }
 
     private fun saveToken(token: String?) {
-        sharedPref.edit().putString("token", token).apply()
+        if (token != null) {
+            sharedPref.edit().putString("token", token).apply()
+        } else {
+            throw Exception("Token is null")
+        }
     }
 
     fun clearSession() {
@@ -48,6 +56,25 @@ class UserRepository(private val context: Context) {
     }
 
     fun isLoggedIn(): Boolean {
-        return sharedPref.getString("token", null) != null
+        val token = sharedPref.getString("token", null)
+        return token != null && !isTokenExpired(token)
+    }
+
+    private fun isTokenExpired(token: String): Boolean {
+        return try {
+            val decodedJWT = JWT.decode(token)
+            val expiryDate = decodedJWT.expiresAt
+            val currentDate = Calendar.getInstance().time
+
+            if (expiryDate == null) {
+                val issueDateClaim = decodedJWT.getClaim("iat").asDate()
+                val issueDate = issueDateClaim ?: currentDate
+                val validUntil = Date(issueDate.time + 24 * 60 * 60 * 1000)
+                return currentDate.after(validUntil)
+            }
+            expiryDate != null && currentDate.after(expiryDate)
+        } catch (e: Exception) {
+            true
+        }
     }
 }

@@ -10,4 +10,5 @@
     <string name="password_too_short">Password terlalu pendek</string>
     <string name="story_description">Deskripsi Cerita</string>
     <string name="upload_story">Unggah Cerita</string>
+    <string name="exit_app">Tekan kembali sekali lagi untuk keluar dari aplikasi</string>
 </resources>

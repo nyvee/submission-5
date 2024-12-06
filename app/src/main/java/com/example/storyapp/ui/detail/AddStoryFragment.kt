@@ -31,6 +31,7 @@ import android.provider.OpenableColumns
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.activity.addCallback
+import androidx.navigation.fragment.findNavController
 import com.example.storyapp.MainActivity
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
@@ -67,8 +68,11 @@ class AddStoryFragment : Fragment() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        mainActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            mainActivity.onBackPressed()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navController = (activity as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+            if (navController != null && !navController.popBackStack()) {
+                requireActivity().onBackPressed()
+            }
         }
 
         binding.galleryButton.setOnClickListener {

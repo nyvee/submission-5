@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +23,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var appBarLayout: AppBarLayout
+
+    // Back press handling
+    private var backPressedTime: Long = 0
+    private lateinit var toast: Toast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // ViewModel initialization with UserRepository
         val factory = AuthViewModelFactory(applicationContext)
         viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
@@ -77,7 +83,6 @@ class MainActivity : AppCompatActivity() {
 
         return super.onPrepareOptionsMenu(menu)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -154,5 +159,24 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         navController.navigate(destinationId, args, navOptions)
+    }
+
+    override fun onBackPressed() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        if (navController.currentDestination?.id == R.id.homeFragment) {
+            if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                toast.cancel()
+                finishAffinity()
+            } else {
+                toast = Toast.makeText(this, getString(R.string.exit_app), Toast.LENGTH_SHORT)
+                toast.show()
+            }
+            backPressedTime = System.currentTimeMillis()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

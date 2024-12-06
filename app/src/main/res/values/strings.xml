@@ -9,4 +9,5 @@
     <string name="password_too_short">Password Too Short</string>
     <string name="story_description">Story Description</string>
     <string name="upload_story">Upload Story</string>
+    <string name="exit_app">Press back again to exit the app</string>
 </resources>
