@@ -1,22 +1,22 @@
 package com.example.storyapp.data
 
-import android.content.Context
-import com.example.storyapp.data.remote.response.StoryResponse
-import com.example.storyapp.data.remote.retrofit.RetrofitInstance
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.storyapp.data.remote.response.Story
+import com.example.storyapp.data.remote.retrofit.ApiService
+import com.example.storyapp.ui.home.StoryPagingSource
+import kotlinx.coroutines.flow.Flow
 
-class StoryRepository(private val context: Context) {
-    private val sharedPref = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+class StoryRepository(private val apiService: ApiService, private val token: String) {
 
-    suspend fun getStories(page: Int? = null, size: Int? = null, location: Int = 0): StoryResponse {
-        return withContext(Dispatchers.IO) {
-            val token = sharedPref.getString("token", null)
-            if (token == null) {
-                throw Exception("Token not found")
-            } else {
-            }
-            RetrofitInstance.api.getStories("Bearer $token", page, size, location)
-        }
+    fun getStoriesPaging(): Flow<PagingData<Story>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10, // Number of items per page
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { StoryPagingSource(apiService, token) }
+        ).flow
     }
 }

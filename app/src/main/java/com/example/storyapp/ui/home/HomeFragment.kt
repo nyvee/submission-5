@@ -2,15 +2,18 @@ package com.example.storyapp.ui.home
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.MainActivity
 import com.example.storyapp.R
 import com.example.storyapp.data.StoryRepository
 import com.example.storyapp.data.remote.response.Story
+import com.example.storyapp.data.remote.retrofit.RetrofitInstance
 import com.example.storyapp.databinding.FragmentHomeBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var viewModel: HomeViewModel
@@ -21,8 +24,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -30,32 +32,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = StoryRepository(requireContext())
-        val factory = HomeViewModelFactory(repository, requireContext())
-        viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+        val token = "Bearer ${requireContext().getSharedPreferences("UserPrefs", 0).getString("token", "")}"
+        val repository = StoryRepository(RetrofitInstance.api, token)
+        viewModel = ViewModelProvider(this, HomeViewModelFactory(repository)).get(HomeViewModel::class.java)
 
         adapter = StoryAdapter { story -> navigateToDetail(story) }
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        viewModel.stories.observe(viewLifecycleOwner, { stories ->
-            adapter.submitList(stories)
-        })
-
-        viewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            binding.swipeRefreshLayout.isRefreshing = false
-        })
-
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.fetchStories()
+        lifecycleScope.launch {
+            viewModel.getStoriesPaging().collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+                println("PagingData received: ${pagingData}")
+            }
         }
 
         binding.fabAddStory.setOnClickListener {
             navigateToAddStory()
         }
-
-        viewModel.fetchStories()
     }
 
     private fun navigateToDetail(story: Story) {
@@ -67,11 +61,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         (activity as MainActivity).navigateWithAnimation(R.id.addStoryFragment)
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as? AppCompatActivity)?.supportActionBar?.apply {
-            title = getString(R.string.app_name)
-            setDisplayHomeAsUpEnabled(false)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

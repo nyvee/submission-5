@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
 
-    implementation(libs.androidx.swiperefreshlayout)
+//    implementation(libs.androidx.swiperefreshlayout)
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
@@ -72,4 +72,6 @@ dependencies {
 
     implementation("androidx.security:security-crypto-ktx:1.1.0-alpha03")
     implementation("com.auth0:java-jwt:4.0.0")
+
+    implementation ("androidx.paging:paging-runtime:3.1.1")
 }
