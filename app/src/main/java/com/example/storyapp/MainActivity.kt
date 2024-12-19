@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.storyDetailFragment -> updateToolbar(getString(R.string.story_detail_title), true)
                 R.id.addStoryFragment -> updateToolbar(getString(R.string.add_story_title), true)
+                R.id.mapsFragment -> updateToolbar("Maps", false)
                 else -> updateToolbarVisibility(false)
             }
         }
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val logoutItem = menu.findItem(R.id.action_logout)
         val localizationItem = menu.findItem(R.id.action_localization)
+
         val isHomeFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.childFragmentManager?.fragments?.get(0) is HomeFragment
         logoutItem.isVisible = isHomeFragment
         localizationItem.isVisible = isHomeFragment

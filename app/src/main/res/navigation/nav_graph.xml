@@ -42,6 +42,10 @@
                 android:name="story"
                 app:argType="com.example.storyapp.data.remote.response.Story" />
         </action>
+        <action
+            android:id="@+id/action_HomeFragment_to_MapsFragment"
+            app:destination="@id/mapsFragment">
+        </action>
     </fragment>
 
     <fragment
@@ -55,4 +59,15 @@
         android:id="@+id/addStoryFragment"
         android:name="com.example.storyapp.ui.detail.AddStoryFragment"
         android:label="AddStoryFragment" />
+
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.storyapp.ui.map.MapsFragment"
+        android:label="Map"
+        tools:layout="@layout/fragment_maps">
+        <argument
+            android:name="stories"
+            app:argType="android.os.Parcelable[]" />
+    </fragment>
+
 </navigation>

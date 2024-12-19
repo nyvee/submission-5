@@ -2,6 +2,7 @@ package com.example.storyapp.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.auth0.jwt.JWT
 import com.example.storyapp.data.remote.response.ErrorResponse
 import com.example.storyapp.data.remote.response.LoginResponse
@@ -46,6 +47,7 @@ class UserRepository(private val context: Context) {
     private fun saveToken(token: String?) {
         if (token != null) {
             sharedPref.edit().putString("token", token).apply()
+            Log.d("UserRepository", "Token saved" + token)
         } else {
             throw Exception("Token is null")
         }

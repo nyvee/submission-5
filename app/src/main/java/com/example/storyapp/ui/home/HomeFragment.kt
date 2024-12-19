@@ -50,11 +50,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.fabAddStory.setOnClickListener {
             navigateToAddStory()
         }
+
+        binding.fabMap.setOnClickListener {
+            navigateToMaps()
+        }
     }
 
     private fun navigateToDetail(story: Story) {
         val action = HomeFragmentDirections.actionHomeFragmentToStoryDetailFragment(story)
         (activity as MainActivity).navigateWithAnimation(action.actionId, action.arguments)
+    }
+
+    private fun navigateToMaps() {
+        (activity as MainActivity).navigateWithAnimation(R.id.mapsFragment)
     }
 
     private fun navigateToAddStory() {
