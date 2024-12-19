@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var appBarLayout: AppBarLayout
 
-    // Back press handling
     private var backPressedTime: Long = 0
     private lateinit var toast: Toast
 
@@ -54,14 +53,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.storyDetailFragment -> updateToolbar(getString(R.string.story_detail_title), true)
                 R.id.addStoryFragment -> updateToolbar(getString(R.string.add_story_title), true)
-                R.id.mapsFragment -> updateToolbar("Maps", false)
+                R.id.mapsFragment -> updateToolbar("Maps", true)
                 else -> updateToolbarVisibility(false)
             }
         }
 
-        // ViewModel initialization with UserRepository
         val factory = AuthViewModelFactory(applicationContext)
-        viewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         if (viewModel.isLoggedIn()) {
             navController.navigate(R.id.homeFragment)

@@ -30,9 +30,13 @@ import android.database.Cursor
 import android.provider.OpenableColumns
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.Location
+import android.util.Log
 import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import com.example.storyapp.MainActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 
@@ -41,6 +45,13 @@ class AddStoryFragment : Fragment() {
     private var _binding: FragmentAddStoryBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private val checkbox get() = binding.checkbox
+
+    private var currentLatitude: Double? = null
+    private var currentLongitude: Double? = null
+
     private val requestCameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -48,6 +59,16 @@ class AddStoryFragment : Fragment() {
             openCamera()
         } else {
             Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val requestLocationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            getCurrentLocation()
+        } else {
+            Toast.makeText(requireContext(), "Location permission is required", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -61,6 +82,8 @@ class AddStoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         val mainActivity = activity as AppCompatActivity
         mainActivity.supportActionBar?.apply {
@@ -83,6 +106,20 @@ class AddStoryFragment : Fragment() {
             checkCameraPermissionAndOpenCamera()
         }
 
+        checkbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    getCurrentLocation()
+                } else {
+                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            } else {
+                Toast.makeText(requireContext(), "Not including current location", Toast.LENGTH_SHORT).show()
+                currentLatitude = null
+                currentLongitude = null
+            }
+        }
+
         binding.buttonAdd.setOnClickListener {
             val sharedPref = requireContext().getSharedPreferences("UserPrefs", AppCompatActivity.MODE_PRIVATE)
             val token = sharedPref.getString("token", "")
@@ -93,7 +130,7 @@ class AddStoryFragment : Fragment() {
             val description = binding.edAddDescription.text.toString()
             val imageUri = binding.previewImageView.tag as? Uri
             if (description.isNotEmpty() && imageUri != null) {
-                uploadStory(token, description, imageUri)
+                uploadStory(token, description, imageUri, currentLatitude, currentLongitude)
             } else {
                 Toast.makeText(requireContext(), "Please provide a description and select an image", Toast.LENGTH_SHORT).show()
             }
@@ -175,21 +212,28 @@ class AddStoryFragment : Fragment() {
         return name
     }
 
-    private fun uploadStory(token: String, description: String, imageUri: Uri) {
+    private fun uploadStory(token: String, description: String, imageUri: Uri, latitude: Double?, longitude: Double?) {
         val file = getFileFromUri(imageUri)
         if (file != null) {
             val compressedFile = compressImageFile(file)
+
             val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), compressedFile)
             val body = MultipartBody.Part.createFormData("photo", compressedFile.name, requestFile)
             val descriptionBody = RequestBody.create("text/plain".toMediaTypeOrNull(), description)
+            val latitudeBody = latitude?.let { RequestBody.create("text/plain".toMediaTypeOrNull(), it.toFloat().toString()) }
+            val longitudeBody = longitude?.let { RequestBody.create("text/plain".toMediaTypeOrNull(), it.toFloat().toString()) }
 
             lifecycleScope.launch {
                 try {
+                    Log.d("UploadStory", "Sending request to API...")
                     val response = RetrofitInstance.api.addStory(
                         token = "Bearer $token",
                         description = descriptionBody,
-                        photo = body
+                        photo = body,
+                        latitude = latitudeBody,
+                        longitude = longitudeBody
                     )
+
                     if (response.error) {
                         Toast.makeText(requireContext(), "Failed to upload story: ${response.message}", Toast.LENGTH_SHORT).show()
                     } else {
@@ -202,6 +246,24 @@ class AddStoryFragment : Fragment() {
             }
         } else {
             Toast.makeText(requireContext(), "Failed to get file from URI", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    currentLatitude = location.latitude
+                    currentLongitude = location.longitude
+                    Toast.makeText(requireContext(), "Location retrieved: $currentLatitude, $currentLongitude", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to get location", Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(), "Error getting location", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "Location permission is not granted", Toast.LENGTH_SHORT).show()
         }
     }
 
